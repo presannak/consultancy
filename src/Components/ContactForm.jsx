@@ -20,7 +20,7 @@ function ContactForm() {
       });
 
       // Make POST request to backend server
-      const response = await fetch('http://localhost:3001/submit-form', {
+      const response = await fetch('http://13.127.129.221:3001/submit-form', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
