@@ -20,7 +20,7 @@ function ContactForm() {
       });
 
       // Make POST request to backend server
-      const response = await fetch('//13.127.129.221:3001/submit-form', {
+      const response = await fetch('https://consultancy-server-tq41.onrender.com/submit-form', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -40,7 +40,7 @@ const Testimonials = () => {
 
   const fetchTestimonials = async () => {
     try {
-      const response = await fetch('//13.127.129.221:3001/reviews');
+      const response = await fetch('https://consultancy-server-tq41.onrender.com/reviews');
       const {data} = await response.json();
       setReviews([...reviews, ...data]);
     } catch (error) {
@@ -72,7 +72,7 @@ const Testimonials = () => {
     };
 
     try {
-      const response = await fetch('//13.127.129.221:3001/submitTestimonial', {
+      const response = await fetch('https://consultancy-server-tq41.onrender.com/submitTestimonial', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
