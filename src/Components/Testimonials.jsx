@@ -42,6 +42,7 @@ const Testimonials = () => {
     try {
       const response = await fetch('https://consultancy-server-tq41.onrender.com/reviews');
       const {data} = await response.json();
+      console.log(data)
       setReviews([...reviews, ...data]);
     } catch (error) {
       console.error('Error fetching testimonials:', error);
