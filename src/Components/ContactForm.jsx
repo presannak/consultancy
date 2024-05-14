@@ -73,10 +73,10 @@ function ContactForm() {
     <div className={styles["form-container"]}>
       <h1>Send a message to us!</h1>
       <form ref={form} onSubmit={sendEmail}>
-        <input type="text" placeholder="Name" name="from_name" />
-        <input type="text" placeholder="Email" name="user_email" />
-        <input type="text" placeholder="Subject" name="subject" />
-        <textarea rows="4" placeholder="Message" name="message"></textarea>
+        <input required type="text" placeholder="Name" name="from_name" />
+        <input required type="text" placeholder="Email" name="user_email" />
+        <input required type="text" placeholder="Subject" name="subject" />
+        <textarea required rows="4" placeholder="Message" name="message"></textarea>
         <input type="submit" value="Send Message" className={styles["submit"]} />
       </form>
       <ToastContainer />
