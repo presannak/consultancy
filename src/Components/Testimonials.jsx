@@ -4,7 +4,8 @@ import Navbar from './Navbar';
 import arrow from '../assets/arrow.png';
 import back from '../assets/back.png';
 import profile from '../assets/profile.jpg';
-import { ToastContainer,toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Testimonials = () => {
   const [reviews, setReviews] = useState([
@@ -41,8 +42,8 @@ const Testimonials = () => {
   const fetchTestimonials = async () => {
     try {
       const response = await fetch('https://consultancy-server-tq41.onrender.com/reviews');
-      const {data} = await response.json();
-      console.log(data)
+      const { data } = await response.json();
+      console.log(data);
       setReviews([...reviews, ...data]);
     } catch (error) {
       console.error('Error fetching testimonials:', error);
@@ -72,84 +73,98 @@ const Testimonials = () => {
       text: formData.get('text')
     };
 
-    try {
-      const response = await fetch('https://consultancy-server-tq41.onrender.com/submitTestimonial', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newReview)
-      });
+    if (!containsNegativeWords(newReview.text)) {
+      try {
+        const response = await fetch('https://consultancy-server-tq41.onrender.com/submitTestimonial', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(newReview)
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to submit testimonial');
-      }
-      const {message} = await response.json();
-      console.log(message)
-      toast.success(message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      
-      setTimeout(()=>{
+        if (!response.ok) {
+          throw new Error('Failed to submit testimonial');
+        }
 
+        const { message } = await response.json();
+        console.log(message);
+        toast.success(message, {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+
+        setTimeout(() => {
           setReviews([...reviews, newReview]);
           setShowForm(false); // Hide the form after submission
-      },2500)
-      event.target.reset();
-    } catch (error) {
-      console.error('Error submitting testimonial:', error);
+        }, 2500);
+        event.target.reset();
+      } catch (error) {
+        console.error('Error submitting testimonial:', error);
+      }
+    } else {
+      alert("Please provide a review without negative words."); // Show an alert for negative review
     }
+  };
+
+  // Function to check if the review contains negative words
+  const containsNegativeWords = (reviewText) => {
+    // List of negative keywords
+    const negativeKeywords = ["bad", "poor", "disappointing", "terrible", "awful", "not", "don't", "doesn't", "didn't", "blame", "stress", "disappointment", "betrayal"];
+    // Convert review text to lowercase for case-insensitive comparison
+    reviewText = reviewText.toLowerCase();
+    // Check if the review text contains any negative keywords
+    return negativeKeywords.some(keyword => reviewText.includes(keyword));
   };
 
   return (
     <>
-    <Navbar />
-    <div className={styles['testimonials']} id="testimonials">
-      <img src={arrow} alt="" className={styles['next-btn']} onClick={slideForward} />
-      <img src={back} alt="" className={styles['back-btn']} onClick={slideBackward} />
-      <div className={styles["slider"]}>
-        <ul ref={slider}>
-          {reviews.map((review, index) => (
-            <li key={index}>
-              <div className={styles["slide"]}>
-                <div className={styles["user-info"]}>
-                  <img src={profile} alt="" />
-                  <div>
-                    <h3>{review.name}</h3>
-                    <span>{review.location}</span>
+      <Navbar />
+      <div className={styles['testimonials']} id="testimonials">
+        <img src={arrow} alt="" className={styles['next-btn']} onClick={slideForward} />
+        <img src={back} alt="" className={styles['back-btn']} onClick={slideBackward} />
+        <div className={styles["slider"]}>
+          <ul ref={slider}>
+            {reviews.map((review, index) => (
+              <li key={index}>
+                <div className={styles["slide"]}>
+                  <div className={styles["user-info"]}>
+                    <img src={profile} alt="" />
+                    <div>
+                      <h3>{review.name}</h3>
+                      <span>{review.location}</span>
+                    </div>
                   </div>
+                  <p>{review.text}</p>
                 </div>
-                <p>{review.text}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-      {!showForm && <button onClick={() => setShowForm(true)} style={{padding:20}} className={styles['add']}>Add your review</button>}
+              </li>
+            ))}
+          </ul>
+        </div>
+        {!showForm && <button onClick={() => setShowForm(true)} style={{ padding: 20 }} className={styles['add']}>Add your review</button>}
 
-      {showForm && (
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="name">Your Name:</label>
-          <input type="text" id="name" name="name" placeholder="Your Name" required />
-          
-          <label htmlFor="location">Your Location:</label>
-          <input type="text" id="location" name="location" placeholder="Your Location" required />
-          
-          <label htmlFor="text">Your Review:</label>
-          <textarea id="text" name="text" placeholder="Your Review" required></textarea>
-          
-          <button className={styles['add']} style={{backgroundColor:"#f9060c"}} type="submit">Submit</button>
-        </form>
-      )}
-    </div>
-    <ToastContainer />
+        {showForm && (
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="name">Your Name:</label>
+            <input type="text" id="name" name="name" placeholder="Your Name" required />
+
+            <label htmlFor="location">Your Location:</label>
+            <input type="text" id="location" name="location" placeholder="Your Location" required />
+
+            <label htmlFor="text">Your Review:</label>
+            <textarea id="text" name="text" placeholder="Your Review" required></textarea>
+
+            <button className={styles['add']} style={{ backgroundColor: "#f9060c" }} type="submit">Submit</button>
+          </form>
+        )}
+      </div>
+      <ToastContainer />
     </>
   );
 };
